@@ -4,7 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { User } from './modules/users/entities/user.entity';
-
+import { CustomersModule } from './modules/customers/customers.module';
+import { Customer } from './modules/customers/entities/customer.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -18,7 +19,7 @@ import { User } from './modules/users/entities/user.entity';
         password: cfg.get<string>('DB_PASSWORD'),
         database: cfg.get<string>('DB_NAME'),
         ssl: cfg.get<string>('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
-        entities: [User],
+        entities: [User,Customer],
         synchronize: cfg.get<string>('DB_SYNC') === 'true', // dev only
         logging: cfg.get<string>('DB_LOGGING') === 'true',
         timezone: cfg.get<string>('DB_TIMEZONE') || 'Z',
@@ -27,6 +28,7 @@ import { User } from './modules/users/entities/user.entity';
     }),
     UsersModule,
     AuthModule,
+    CustomersModule,
   ],
 })
 export class AppModule {}
