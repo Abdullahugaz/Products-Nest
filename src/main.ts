@@ -1,20 +1,19 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: 'http://localhost:5173',
-    credentials: true,
+    origin: [
+      'http://192.168.1.15:8082',
+      'http://localhost:8082',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: false, // set true only if you’re using cookies
   });
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
-
-  await app.listen(7000);
+  await app.listen(process.env.PORT ? Number(process.env.PORT) : 2000);
 }
-bootstrap().catch((err) => {
-  console.error('Error during bootstrap', err);
-  process.exit(1);
-});
+bootstrap();
