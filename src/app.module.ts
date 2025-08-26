@@ -6,6 +6,8 @@ import { AuthModule } from './modules/auth/auth.module';
 import { User } from './modules/users/entities/user.entity';
 import { CustomersModule } from './modules/customers/customers.module';
 import { Customer } from './modules/customers/entities/customer.entity';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -19,7 +21,7 @@ import { Customer } from './modules/customers/entities/customer.entity';
         password: cfg.get<string>('DB_PASSWORD'),
         database: cfg.get<string>('DB_NAME'),
         ssl: cfg.get<string>('DB_SSL') === 'true' ? { rejectUnauthorized: false } : false,
-        entities: [User,Customer],
+        entities: [User,Customer,Category],
         synchronize: cfg.get<string>('DB_SYNC') === 'true', // dev only
         logging: cfg.get<string>('DB_LOGGING') === 'true',
         timezone: cfg.get<string>('DB_TIMEZONE') || 'Z',
@@ -29,6 +31,7 @@ import { Customer } from './modules/customers/entities/customer.entity';
     UsersModule,
     AuthModule,
     CustomersModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}
