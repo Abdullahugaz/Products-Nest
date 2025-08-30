@@ -7,6 +7,7 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
+import { Product } from 'src/products/entities/product.entity';
 
 @Entity({ name: 'categories' })
 export class Category {
@@ -25,6 +26,10 @@ export class Category {
 
   @OneToMany(() => Category, (category) => category.parent)
   children?: Category[];
+
+  // ✅ Relation to products
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 
   @Column({ default: true })
   is_active: boolean;

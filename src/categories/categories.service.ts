@@ -14,14 +14,12 @@ export class CategoriesService {
 
   // Liiska categories oo dhan
   async findAll(): Promise<Category[]> {
-    return await this.categoryRepository.find({
-      where: { is_deleted: false },
-    });
+    return await this.categoryRepository.find(); // dhammaan categories
   }
 
   // Hal category
   async findOne(id: number): Promise<Category> {
-    const category = await this.categoryRepository.findOneBy({ id, is_deleted: false });
+    const category = await this.categoryRepository.findOneBy({ id });
     if (!category) {
       throw new NotFoundException(`Category with id ${id} not found.`);
     }
@@ -35,24 +33,20 @@ export class CategoriesService {
   }
 
   // Update category
-  async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
-    const category = await this.categoryRepository.findOneBy({ id, is_deleted: false });
-    if (!category) {
-      throw new NotFoundException(`Category with id ${id} not found.`);
-    }
+async update(id: number, updateCategoryDto: UpdateCategoryDto): Promise<Category> {
+  const category = await this.categoryRepository.findOneBy({ id });
+  if (!category) throw new NotFoundException(`Category with id ${id} not found`);
 
-    Object.assign(category, updateCategoryDto);
-    return await this.categoryRepository.save(category);
-  }
+  Object.assign(category, updateCategoryDto);
+  return this.categoryRepository.save(category);
+}
 
-  // Soft delete
+
+  // Hard delete
   async remove(id: number): Promise<void> {
-    const category = await this.categoryRepository.findOneBy({ id, is_deleted: false });
-    if (!category) {
+    const result = await this.categoryRepository.delete(id);
+    if (result.affected === 0) {
       throw new NotFoundException(`Category with id ${id} not found.`);
     }
-
-    category.is_deleted = true;
-    await this.categoryRepository.save(category);
   }
 }
